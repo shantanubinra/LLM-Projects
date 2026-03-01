@@ -9,6 +9,8 @@ The platform features a dual‑write vector database architecture for managing b
 > The application is architected as a collection of decoupled, single‑responsibility modules.
 
 👉 **[Detailed module documentation & screenshots](Module_detials.md)**
+<img width="1920" height="1080" alt="Screenshot (114)" src="https://github.com/user-attachments/assets/83c64a12-af49-4756-8cc6-249ecf44c311" />
+<img width="1920" height="1080" alt="Screenshot (112)" src="https://github.com/user-attachments/assets/c26ccad7-fed1-4237-8be1-e7fd18032880" />
 
 ---
 
@@ -118,4 +120,4 @@ Follow these steps to configure and run the application locally.
 
 ---
 
-*Enjoy exploring multimodal document intelligence!*
+
