@@ -69,6 +69,7 @@ The application is modular and decoupled, with each responsibility contained wit
 - **Document Parsing:** PyMuPDF (fitz)
 
 ---
+<img width="1920" height="1080" alt="Screenshot (114)" src="https://github.com/user-attachments/assets/d70fc78d-da6c-4564-9806-f9049ca5476a" />
 
 ## 🔬 Design Decisions & Experimentation
 
@@ -121,6 +122,8 @@ Every architectural choice in this project was driven by a trade‑off study bet
 - During generation, the app parses this metadata to emit HTML anchors (`<a href="...#page=X">`).
 - Streamlit serves the PDFs locally – clicking a citation takes users directly to the referenced page.
 
+<img width="1920" height="1080" alt="Screenshot (113)" src="https://github.com/user-attachments/assets/6c1907e7-0697-490e-b869-954c1d39a77c" />
+
 ---
 
 ## 📡 Observability & Tracing
@@ -129,7 +132,14 @@ The entire LCEL pipeline is instrumented with Arize Phoenix via OpenTelemetry, c
 
 `Custom spans` log dynamic routing parameters including `best_similarity_score`, the threshold evaluated, and whether `rewrite_triggered` was activated.
 
-> *(Insert your Phoenix screenshot here showing the traces)*
+<img width="940" height="410" alt="image" src="https://github.com/user-attachments/assets/a63d01af-6ed1-4e9a-ac42-0f541e90dd2b" />
+<img width="940" height="529" alt="image" src="https://github.com/user-attachments/assets/054c6c14-1ce6-46d4-9ed8-528744bbd9b1" />
+<img width="940" height="529" alt="image" src="https://github.com/user-attachments/assets/599d0b61-f5a9-4d63-bd77-9313a094263d" />
+<img width="940" height="457" alt="image" src="https://github.com/user-attachments/assets/8fb25659-d625-4a9c-aa6e-33d510e49114" />
+<img width="940" height="529" alt="image" src="https://github.com/user-attachments/assets/ba1449ce-f0d5-4a8f-9791-493bc865a424" />
+<img width="940" height="529" alt="image" src="https://github.com/user-attachments/assets/e60ef3b7-98ef-4807-88b7-108b7beaca8a" />
+
+
 
 
 ---
