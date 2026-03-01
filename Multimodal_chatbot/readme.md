@@ -1,53 +1,52 @@
-📄 Multimodal RAG Document Assistant
-🚀 Project Overview
-This project is a Multimodal Retrieval-Augmented Generation (RAG) system built to ingest, index, and reason over complex documents. Unlike standard text-only RAG pipelines, this system is capable of extracting and understanding both text and embedded visual data (charts, graphs, images) using vision-language models.
+# 📄 Multimodal RAG Document Assistant
 
-It features a dual-write vector database architecture for managing both permanent knowledge and isolated temporary sessions, dynamic query routing with conversational memory, exact-page clickable citations, and a continuous LLM-as-a-judge evaluation loop.
+## 🚀 Project Overview
 
-This application is highly decoupled into single-responsibility modules. 
+This repository implements a **Multimodal Retrieval‑Augmented Generation (RAG)** system designed to ingest, index, and reason over complex documents. Unlike traditional text‑only RAG pipelines, it extracts and understands both written content and embedded visual data (charts, graphs, images) using vision‑language models.
 
-👉 **[Click here to read the Detailed Module Documentation & View Output Screenshots](Module_detials.md)**
+The platform features a dual‑write vector database architecture for managing both permanent knowledge and isolated temporary sessions, dynamic query routing with conversational memory, exact‑page clickable citations, and a continuous LLM‑as‑a‑judge evaluation loop.
 
-🛠️ Key Components & Infrastructure
-Frontend/UI: Streamlit (with local static file serving for PDF rendering)
+> The application is architected as a collection of decoupled, single‑responsibility modules.
 
-Orchestration: LangChain (using LCEL syntax)
+👉 **[Detailed module documentation & screenshots](Module_detials.md)**
 
-LLMs: OpenAI gpt-4o (Reasoning & Generation), gpt-4o-mini (Vision/Ingestion)
+---
 
-Embeddings: OpenAI text-embedding-3-small
+## 🛠️ Key Components & Infrastructure
 
-Vector Database: ChromaDB (Local SQLite-backed & Ephemeral In-Memory)
+- **Frontend/UI:** Streamlit (serves static files locally for PDF rendering)
+- **Orchestration:** LangChain (LCEL syntax)
+- **LLMs:** OpenAI `gpt-4o` (reasoning/generation), `gpt-4o-mini` (vision/ingestion)
+- **Embeddings:** OpenAI `text-embedding-3-small`
+- **Vector Database:** ChromaDB (persistent SQLite + ephemeral in‑memory)
+- **Document Parsing:** PyMuPDF (`fitz`) for text and base64 image extraction
+- **Observability:** Arize Phoenix (via OpenTelemetry)
+- **Evaluation:** Ragas framework
 
-Document Parsing: PyMuPDF (fitz) for text and base64 image extraction
+---
 
-Observability: Arize Phoenix (via OpenTelemetry)
+## 🧩 Module Design & Architecture
 
-Evaluation: Ragas Framework
+Each component handles a focused concern:
 
-🧩 Module Design & Architecture
-The application is highly decoupled into single-responsibility modules:
+- **app.py** *(Orchestrator)* – main Streamlit app. Manages session state, UI, database toggling (permanent vs temporary), static file routing for citations, and user feedback.
+- **src/parser.py** *(Ingestion Engine)* – parses documents page by page with PyMuPDF; optionally calls the Vision API (with Tenacity‑backed retries) to summarize charts/images.
+- **src/retriever.py** *(Storage Manager)* – handles ChromaDB interactions; supports both disk‑backed and ephemeral in‑memory stores.
+- **src/generator.py** *(Reasoning Engine)* – core LangChain logic; implements dynamic query routing with conversational history and logs decisions via custom OpenTelemetry spans.
+- **src/evaluator.py & evaluate.py** *(Evaluation Loop)* – `evaluator.py` captures flagged UI responses to `.jsonl`; `evaluate.py` runs Ragas against a golden `test.json` dataset plus flagged responses, producing metrics (faithfulness, relevancy, context precision/recall).
 
-app.py (The Orchestrator): The main Streamlit application. Manages session states, UI rendering, database toggling (Permanent vs. Temporary), static file routing for citations, and user feedback collection (thumbs down/flagging).
+---
 
-src/parser.py (The Ingestion Engine): Uses PyMuPDF to parse documents page-by-page. It includes an optional, Tenacity-backed (exponential backoff) Vision API integration to summarize charts and images into text chunks.
+## 📁 Project Layout
 
-src/retriever.py (The Storage Manager): Handles all ChromaDB interactions. It exposes methods to write to the permanent disk-backed database or spin up ephemeral, in-memory vector stores for isolated document chats.
-
-src/generator.py (The Reasoning Engine): Contains the core LangChain logic. Implements Dynamic Query Routing: if the initial mathematical retrieval score is too low, it autonomously rewrites the user's query using conversational history before fetching context. All routing decisions are logged via custom OpenTelemetry spans.
-
-src/evaluator.py & evaluate.py (The Evaluation Loop): * evaluator.py captures flagged responses from the UI and saves them to a .jsonl file.
-
-evaluate.py is a standalone script that uses Ragas to evaluate both a golden test set (test.json) and the user-flagged responses, outputting a unified metrics report (Faithfulness, Answer Relevancy, Context Precision/Recall).
-
-
+```
 project_root/
 │
 ├── .streamlit/
-│   └── config.toml                # Enables static file serving for PDF citations
+│   └── config.toml                # Static file serving for PDF citations
 ├── data/                          # Temporary storage for uploaded raw PDFs
 ├── static/
-│   └── pdfs/                      # Static serving directory for clickable citations
+│   └── pdfs/                      # Static directory used for citations
 ├── vector_db/                     # Persistent Chroma SQLite database
 ├── evaluation_outputs/            # Generated Ragas JSON/CSV reports
 │
@@ -60,66 +59,63 @@ project_root/
 │   └── retriever.py
 │
 ├── app.py                         # Main Streamlit application
-├── config.py                      # Global thresholds and configurations
+├── config.py                      # Global thresholds/config
 ├── evaluate.py                    # Standalone Ragas evaluation script
-├── test.json                      # Golden test set for evaluations
-├── requirements.txt               # Project dependencies
-└── README.md                      # Project documentation
-
-
-⚙️ Project Setup & Installation Guide
-Follow these steps to configure the environment and run the application locally.
-
-1. Prerequisites
-Ensure you have Python 3.9 or higher installed on your system.
-
-2. Create a Virtual Environment
-It is highly recommended to use a virtual environment to manage dependencies. Open your terminal and run:
-
-**For Windows (Command Prompt / PowerShell):**
-```bash
-python -m venv venv
-venv\Scripts\activate
+├── test.json                      # Golden evaluation test set
+├── requirements.txt               # Dependencies
+└── README.md                      # This documentation
 ```
 
-**For macOS / Linux / WSL:**
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
-3. Install Dependencies
-With your virtual environment activated, install the required packages:
+---
 
-```bash
-pip install -r requirements.txt
-```
-4. Configure Environment Variables
-Create a .env file in the root directory of the project and add your OpenAI API key:
+## ⚙️ Setup & Installation Guide
 
-```bash
-OPENAI_API_KEY="your-openai-api-key-here"
-```
-5. Configure Streamlit for Static File Serving
-For the clickable PDF citations to work properly, Streamlit must be allowed to serve local files.
-Create a .streamlit folder in your root directory, create a config.toml file inside it, and add the following:
+Follow these steps to configure and run the application locally.
 
-```toml
-[server]
-enableStaticServing = true
-```
-6. Run the Application
-Start the Streamlit server:
+1. **Prerequisites** – Python 3.9+ is required.
 
-```bash
-streamlit run app.py
-```
+2. **Create a virtual environment** (recommended):
+   - **Windows (CMD/PowerShell):**
+     ```bash
+     python -m venv venv
+     venv\Scripts\activate
+     ```
+   - **macOS/Linux/WSL:**
+     ```bash
+     python3 -m venv venv
+     source venv/bin/activate
+     ```
 
-The app will open automatically in your browser at http://localhost:8501.
-The Arize Phoenix observability dashboard will launch automatically in the background.
+3. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-7. Run the Evaluation Pipeline (Optional)
-To run the Ragas LLM-as-a-judge evaluation on the test set and any user-flagged responses:
+4. **Configure environment variables:**
+   Create a `.env` file in the project root containing:
+   ```bash
+   OPENAI_API_KEY="your-openai-api-key-here"
+   ```
 
-```bash
-python evaluate.py
-```
+5. **Enable Streamlit static serving:**
+   Ensure `.streamlit/config.toml` exists with:
+   ```toml
+   [server]
+   enableStaticServing = true
+   ```
+
+6. **Run the application:**
+   ```bash
+   streamlit run app.py
+   ```
+   The app will open at `http://localhost:8501` and Arize Phoenix will start in the background.
+
+7. **(Optional) Evaluate with Ragas:**
+   ```bash
+   python evaluate.py
+   ```
+   This executes the Ragas LLM‑as‑a‑judge evaluation on the golden test set and any flagged responses.
+
+---
+
+*Enjoy exploring multimodal document intelligence!*
