@@ -143,5 +143,3 @@ The entire LCEL pipeline is instrumented with Arize Phoenix via OpenTelemetry, c
 
 
 ---
-
-*For additional screenshots, logs, or architecture diagrams, refer to the original repository assets.*
