@@ -1,0 +1,30 @@
+[
+  {
+    "question": "What are the core mandatory components required for this assignment?",
+    "ground_truth": "The assignment requires building a RAG pipeline with PDF parsing, chunking, a Vector Database, LLM integration, a chat interface with memory, and an evaluation pipeline."
+  },
+  {
+    "question": "Which vector databases are allowed for this project?",
+    "ground_truth": "You can use any vector database, including Chroma, FAISS, LanceDB, or Qdrant."
+  },
+  {
+    "question": "What tool must be used for observability and tracing?",
+    "ground_truth": "Arize Phoenix must be used to track LLM traces, retrieved chunks, and token usage."
+  },
+  {
+    "question": "Is it required to deploy the final application to a cloud provider like AWS?",
+    "ground_truth": "No, the requirement is to build a local web application, such as one using Streamlit, not to deploy it to the cloud."
+  },
+  {
+    "question": "How should the system handle follow-up questions?",
+    "ground_truth": "The system must include a chat history mechanism that uses previous interactions to contextualize and answer follow-up questions accurately."
+  },
+  {
+    "question": "Are we required to evaluate the pipeline? If so, how?",
+    "ground_truth": "Yes, a basic evaluation pipeline is required. It should run on 5 to 10 test questions and output an accuracy table."
+  },
+  {
+    "question": "How should charts and images in the PDF be processed?",
+    "ground_truth": "The pipeline should be multimodal, capable of extracting charts and images and using a vision model to generate summaries or data points to be stored in the vector database."
+  }
+]
