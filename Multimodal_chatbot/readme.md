@@ -8,6 +8,9 @@ The platform features a dual‑write vector database architecture for managing b
 
 > The application is architected as a collection of decoupled, single‑responsibility modules.
 
+## Architecture detials
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/0f46a19b-f236-43ca-a33a-6cb28f242363" />
 
 
 👉 **[Detailed module documentation & screenshots](Module_detials.md)**
