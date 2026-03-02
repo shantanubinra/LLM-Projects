@@ -8,11 +8,92 @@ The platform features a dual‑write vector database architecture for managing b
 
 > The application is architected as a collection of decoupled, single‑responsibility modules.
 
+
+
 👉 **[Detailed module documentation & screenshots](Module_detials.md)**
 <img width="1920" height="1080" alt="Screenshot (114)" src="https://github.com/user-attachments/assets/83c64a12-af49-4756-8cc6-249ecf44c311" />
 <img width="1920" height="1080" alt="Screenshot (112)" src="https://github.com/user-attachments/assets/c26ccad7-fed1-4237-8be1-e7fd18032880" />
 
----
+## 🚀 Project Architecture
+
+flowchart TD
+    %% Styling
+    classDef ui fill:#4CAF50,stroke:#388E3C,stroke-width:2px,color:white
+    classDef processing fill:#2196F3,stroke:#1976D2,stroke-width:2px,color:white
+    classDef storage fill:#FF9800,stroke:#F57C00,stroke-width:2px,color:white
+    classDef llm fill:#9C27B0,stroke:#7B1FA2,stroke-width:2px,color:white
+    classDef observability fill:#607D8B,stroke:#455A64,stroke-width:2px,color:white
+    classDef eval fill:#E91E63,stroke:#C2185B,stroke-width:2px,color:white
+
+    subgraph User Interface [Streamlit Frontend]
+        A[User Uploads PDF]:::ui
+        B[User Asks Question]:::ui
+        C[Thumbs Down Feedback]:::ui
+    end
+
+    subgraph Ingestion Pipeline [src/parser.py]
+        D[Save PDF to static/pdfs/]:::processing
+        E[PyMuPDF: Extract Text & Images]:::processing
+        F{Vision Enabled?}:::processing
+        G[gpt-4o-mini: Summarize Images]:::llm
+        H[Chunking & Metadata Tagging]:::processing
+        I[text-embedding-3-small]:::llm
+    end
+
+    subgraph Vector Database [src/retriever.py]
+        J[(ChromaDB: Permanent/Ephemeral)]:::storage
+    end
+
+    subgraph RAG & Routing [src/generator.py]
+        K[Retrieve Top-K Chunks k=10]:::processing
+        L{Score >= 0.7?}:::processing
+        M[LLM Rewriter + Chat History]:::llm
+        N[gpt-4o: Generate Answer]:::llm
+        O[Dynamic HTML Citations]:::processing
+    end
+
+    subgraph Observability [Arize Phoenix]
+        P([OpenTelemetry Tracing: Logs Routing, Tokens, Latency]):::observability
+    end
+
+    subgraph Evaluation Loop [src/evaluator.py & evaluate.py]
+        Q[(flagged_responses.jsonl)]:::storage
+        R[(test.json)]:::storage
+        S[Ragas Evaluator: Faithfulness, Relevancy]:::eval
+        T[JSON Evaluation Report]:::eval
+    end
+
+    %% Ingestion Flow
+    A --> D
+    D --> E
+    E --> F
+    F -- Yes --> G
+    G --> H
+    F -- No --> H
+    H --> I
+    I --> J
+
+    %% Interaction Flow
+    B --> K
+    J <--> K
+    K --> L
+    L -- No --> M
+    M --> K
+    L -- Yes --> N
+    N --> O
+    O --> |Renders Answer & Links| B
+
+    %% Feedback & Eval Flow
+    C --> Q
+    Q --> S
+    R --> S
+    S --> T
+
+    %% Observability Connections (Dotted lines)
+    G -.-> P
+    I -.-> P
+    M -.-> P
+    N -.-> P
 
 ## 🛠️ Key Components & Infrastructure
 
