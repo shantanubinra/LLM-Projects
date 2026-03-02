@@ -10,7 +10,8 @@ The platform features a dual‑write vector database architecture for managing b
 
 ## Architecture detials
 
-![Uploading image.png…]()
+<img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/6892d037-b049-41ce-9df0-26c85145aa79" />
+
 
 
 
