@@ -16,6 +16,9 @@ The platform features a dual‑write vector database architecture for managing b
 
 
 👉 **[Detailed module documentation & screenshots](Module_detials.md)**
+
+<img width="2000" height="1125" alt="image" src="https://github.com/user-attachments/assets/38d0e506-ae0f-424d-858a-22c8d6ed392b" />
+
 <img width="1920" height="1080" alt="Screenshot (114)" src="https://github.com/user-attachments/assets/83c64a12-af49-4756-8cc6-249ecf44c311" />
 <img width="1920" height="1080" alt="Screenshot (112)" src="https://github.com/user-attachments/assets/c26ccad7-fed1-4237-8be1-e7fd18032880" />
 
